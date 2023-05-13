@@ -1,3 +1,3 @@
 # Employees
-Példa alkalmazás Teszt
+Training360 - Microservices alkalmazás felépítése Spring Boot keretrendszerrel
 
