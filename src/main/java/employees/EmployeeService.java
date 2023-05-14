@@ -8,6 +8,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -25,8 +27,20 @@ public class EmployeeService {
         this.modelMapper = modelMapper;
     }
 
-    public List<EmployeeDto> listEmployees() {
+    public List<EmployeeDto> listEmployees(Optional<String> prefix) {
         Type targetTypeList = new TypeToken<List<Employee>>(){}.getType();
-        return modelMapper.map(employees, targetTypeList);
+
+        List<Employee> filtered = employees.stream()
+                .filter(e -> prefix.isEmpty() || e.getName().toLowerCase().startsWith(prefix.get().toLowerCase()))
+                .collect(Collectors.toList());
+
+        return modelMapper.map(filtered, targetTypeList);
+    }
+
+    public EmployeeDto findEmployeeById(long id) {
+        return modelMapper.map(employees.stream()
+                .filter(e -> e.getId() == id).findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Employee not foud: "+id)),
+                EmployeeDto.class);
     }
 }
