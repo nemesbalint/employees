@@ -54,7 +54,7 @@ public class EmployeeService {
 //                EmployeeDto.class);
         return employeeMapper.toDto(employees.stream()
                         .filter(e -> e.getId() == id).findAny()
-                        .orElseThrow(() -> new IllegalArgumentException("Employee not foud: "+id)));
+                        .orElseThrow(() -> new IllegalArgumentException("Employee not found: "+id)));
     }
 
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
