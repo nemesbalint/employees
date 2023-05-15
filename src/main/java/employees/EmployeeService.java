@@ -1,7 +1,7 @@
 package employees;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
+//import org.modelmapper.ModelMapper;
+//import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -15,8 +15,9 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeService {
 
-    private ModelMapper modelMapper;
+//    private ModelMapper modelMapper;
 
+    private EmployeeMapper employeeMapper;
 
     private AtomicLong id = new AtomicLong();
 
@@ -27,31 +28,40 @@ public class EmployeeService {
             )
     ));
 
-    public EmployeeService(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
+//    public EmployeeService(ModelMapper modelMapper) {
+//        this.modelMapper = modelMapper;
+//    }
+
+    public EmployeeService(EmployeeMapper employeeMapper) {
+        this.employeeMapper = employeeMapper;
     }
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
-        Type targetTypeList = new TypeToken<List<Employee>>(){}.getType();
+//        Type targetTypeList = new TypeToken<List<Employee>>(){}.getType();
 
         List<Employee> filtered = employees.stream()
                 .filter(e -> prefix.isEmpty() || e.getName().toLowerCase().startsWith(prefix.get().toLowerCase()))
                 .collect(Collectors.toList());
 
-        return modelMapper.map(filtered, targetTypeList);
+//        return modelMapper.map(filtered, targetTypeList);
+        return employeeMapper.toDto(filtered);
     }
 
     public EmployeeDto findEmployeeById(long id) {
-        return modelMapper.map(employees.stream()
-                .filter(e -> e.getId() == id).findAny()
-                .orElseThrow(() -> new IllegalArgumentException("Employee not foud: "+id)),
-                EmployeeDto.class);
+//        return modelMapper.map(employees.stream()
+//                .filter(e -> e.getId() == id).findAny()
+//                .orElseThrow(() -> new IllegalArgumentException("Employee not foud: "+id)),
+//                EmployeeDto.class);
+        return employeeMapper.toDto(employees.stream()
+                        .filter(e -> e.getId() == id).findAny()
+                        .orElseThrow(() -> new IllegalArgumentException("Employee not foud: "+id)));
     }
 
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
         Employee employee = new Employee(id.getAndIncrement(), command.getName());
         employees.add(employee);
-        return modelMapper.map(employee, EmployeeDto.class);
+//        return modelMapper.map(employee, EmployeeDto.class);
+        return employeeMapper.toDto(employee);
     }
 
     public EmployeeDto updateEmployee(long id, UpdateEmployeeCommand command) {
@@ -60,7 +70,8 @@ public class EmployeeService {
                 .findFirst()
                 .orElseThrow(()-> new IllegalArgumentException("Employee not found: "+id));
         employee.setName(command.getName());
-        return modelMapper.map(employee, EmployeeDto.class);
+//        return modelMapper.map(employee, EmployeeDto.class);
+        return employeeMapper.toDto(employee);
     }
 
     public void deleteEmployee(long id) {
