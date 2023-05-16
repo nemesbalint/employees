@@ -52,9 +52,12 @@ public class EmployeeService {
 //                .filter(e -> e.getId() == id).findAny()
 //                .orElseThrow(() -> new IllegalArgumentException("Employee not foud: "+id)),
 //                EmployeeDto.class);
+//        return employeeMapper.toDto(employees.stream()
+//                        .filter(e -> e.getId() == id).findAny()
+//                        .orElseThrow(() -> new IllegalArgumentException("Employee not found: "+id)));
         return employeeMapper.toDto(employees.stream()
-                        .filter(e -> e.getId() == id).findAny()
-                        .orElseThrow(() -> new IllegalArgumentException("Employee not found: "+id)));
+                .filter(e -> e.getId() == id).findAny()
+                .orElseThrow(() -> new EmployeeNotFoundException(id)));
     }
 
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
@@ -68,7 +71,8 @@ public class EmployeeService {
         Employee employee = employees.stream()
                 .filter(e-> e.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new IllegalArgumentException("Employee not found: "+id));
+//                .orElseThrow(()-> new IllegalArgumentException("Employee not found: "+id));
+                .orElseThrow(()-> new EmployeeNotFoundException(id));
         employee.setName(command.getName());
 //        return modelMapper.map(employee, EmployeeDto.class);
         return employeeMapper.toDto(employee);
@@ -78,7 +82,8 @@ public class EmployeeService {
         Employee employee = employees.stream()
                 .filter(e-> e.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new IllegalArgumentException("Employee not found: "+id));
+//                .orElseThrow(()-> new IllegalArgumentException("Employee not found: "+id));
+                .orElseThrow(()-> new EmployeeNotFoundException(id));
         employees.remove(employee);
     }
 }

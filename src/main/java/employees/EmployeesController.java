@@ -62,16 +62,16 @@ public class EmployeesController {
         employeeService.deleteEmployee(id);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ProblemDetail> handleNotFound(IllegalArgumentException iea) {
-        ProblemDetail problemDetail =
-                ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, iea.getMessage());
-        problemDetail.setType(URI.create("employees/not-found"));
-        problemDetail.setTitle("Not found");
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                .body(problemDetail);
-    }
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ResponseEntity<ProblemDetail> handleNotFound(IllegalArgumentException iea) {
+//        ProblemDetail problemDetail =
+//                ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, iea.getMessage());
+//        problemDetail.setType(URI.create("employees/not-found"));
+//        problemDetail.setTitle("Not found");
+//        return ResponseEntity
+//                .status(HttpStatus.NOT_FOUND)
+//                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+//                .body(problemDetail);
+//    }
 }
