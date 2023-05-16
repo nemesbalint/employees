@@ -86,4 +86,9 @@ public class EmployeeService {
                 .orElseThrow(()-> new EmployeeNotFoundException(id));
         employees.remove(employee);
     }
+
+    public void deleteAllEmployees() {
+        id = new AtomicLong();
+        employees.clear();
+    }
 }
