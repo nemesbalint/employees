@@ -1,5 +1,8 @@
 package employees;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employees")
+@Tag(name = "Operations on employees")
 public class EmployeesController {
     private EmployeeService employeeService; //kötelező függőség!
 
@@ -24,11 +28,13 @@ public class EmployeesController {
         this.employeeService = employeeService;
     }
     @GetMapping
+    @Operation(summary = "list employees with given prefix")
     public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix) {
         return employeeService.listEmployees(prefix);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "find employee by given identifier")
     public EmployeeDto findEmployeeById(@PathVariable("id") long id) {
         return employeeService.findEmployeeById(id);
     }
@@ -44,15 +50,19 @@ public class EmployeesController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @Operation(summary = "create and employee")
+    @ApiResponse(responseCode = "201", description = "employee has been created")
     public EmployeeDto createEmployee(@RequestBody CreateEmployeeCommand command) {
         return employeeService.createEmployee(command);
     }
     @PutMapping("/{id}")
+    @Operation(summary = "modify an employee")
     public EmployeeDto updateEmployee(@PathVariable("id") long id, @RequestBody UpdateEmployeeCommand command) {
         return employeeService.updateEmployee(id, command);
     }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "delete given employee")
     public void deleteEmployee(@PathVariable("id") long id) {
         employeeService.deleteEmployee(id);
     }
