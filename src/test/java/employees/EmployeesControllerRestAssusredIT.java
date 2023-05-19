@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.with;
 import static org.hamcrest.Matchers.equalTo;
@@ -55,4 +56,14 @@ public class EmployeesControllerRestAssusredIT {
                 .body("size()", equalTo(1))
                 ;
     }
+
+    @Test
+    public void validate() {
+        with()
+                .body(new CreateEmployeeCommand("John Doe"))
+                .post("/api/employees")
+                .then()
+                .body(matchesJsonSchemaInClasspath("employee-dto.json"));
+    }
+
 }

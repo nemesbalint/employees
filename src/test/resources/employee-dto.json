@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Identifier of employee",
+      "format": "int64",
+      "example": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the employee",
+      "example": "John Doe"
+    }
+  },
+  "additionalProperties": false
+}
