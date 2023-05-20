@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,13 +29,19 @@ public class EmployeesController {
     public EmployeesController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "list employees with given prefix")
     public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix) {
         return employeeService.listEmployees(prefix);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/xml", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "list employees with given prefix xml and json version")
+    public EmployeesDto listEmployeesAsJsonAndXml(@RequestParam Optional<String> prefix) {
+        return new EmployeesDto(employeeService.listEmployees(prefix));
+    }
+
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "find employee by given identifier")
     public EmployeeDto findEmployeeById(@PathVariable("id") long id) {
         return employeeService.findEmployeeById(id);
