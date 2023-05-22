@@ -3,9 +3,14 @@ package employees;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +22,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.print.attribute.standard.Media;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -60,7 +68,7 @@ public class EmployeesController {
     @PostMapping
     @Operation(summary = "create and employee")
     @ApiResponse(responseCode = "201", description = "employee has been created")
-    public EmployeeDto createEmployee(@RequestBody CreateEmployeeCommand command) {
+    public EmployeeDto createEmployee(@Valid @RequestBody CreateEmployeeCommand command) {
         return employeeService.createEmployee(command);
     }
     @PutMapping("/{id}")
@@ -73,6 +81,24 @@ public class EmployeesController {
     @Operation(summary = "delete given employee")
     public void deleteEmployee(@PathVariable("id") long id) {
         employeeService.deleteEmployee(id);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ProblemDetail> handleValidException(MethodArgumentNotValidException exception) {
+        List<Violation> violations =
+                exception.getBindingResult().getFieldErrors().stream()
+                        .map(fe -> new Violation(fe.getField(), fe.getDefaultMessage()))
+                        .collect(Collectors.toList());
+
+        ProblemDetail problemDetail =
+                ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+        problemDetail.setTitle("Validation error");
+        problemDetail.setType(URI.create("employees/not-valid"));
+        problemDetail.setProperty("violations", violations);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(problemDetail);
     }
 
 //    @ExceptionHandler(IllegalArgumentException.class)
