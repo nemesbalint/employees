@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateEmployeeCommand {
-    @NotBlank(message = "Name can not be blank")
-    @NotNull(message = "Name can not be null")
+    //@NotBlank(message = "Name can not be blank")
+    //@NotNull(message = "Name can not be null")
+    @Name
     private String name;
 }
