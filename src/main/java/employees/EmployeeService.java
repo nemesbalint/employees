@@ -1,5 +1,8 @@
 package employees;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +12,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class EmployeeService {
 
+//    private Logger log = LoggerFactory.getLogger(EmployeeService.class);
     private EmployeeMapper employeeMapper;
 
     private AtomicLong id = new AtomicLong();
@@ -27,10 +32,11 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
-
         List<Employee> filtered = employees.stream()
                 .filter(e -> prefix.isEmpty() || e.getName().toLowerCase().startsWith(prefix.get().toLowerCase()))
                 .collect(Collectors.toList());
+
+        log.debug("listEmployees called with prefix: {}, result count is {} ", prefix, filtered.size());
 
         return employeeMapper.toDto(filtered);
     }
@@ -44,6 +50,9 @@ public class EmployeeService {
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
         Employee employee = new Employee(id.getAndIncrement(), command.getName());
         employees.add(employee);
+        log.info("Employee has been created");
+        log.debug("Employee has been created with name {}", command.getName());
+
         return employeeMapper.toDto(employee);
     }
 

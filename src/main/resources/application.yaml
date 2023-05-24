@@ -2,5 +2,7 @@ spring:
   config:
     activate:
       on-profile: prod
-
+logging:
+    level:
+      employees: debug
 message: Hello (from application.yaml)
