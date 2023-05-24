@@ -18,7 +18,6 @@ public class HelloController {
     @GetMapping("/")
     //@ResponseBody, mert @RestController esetén nem kell
     public String sayHello() {
-        //return "Hello Spring Boot "+ LocalDateTime.now();
         return helloService.sayHello();
     }
 }
