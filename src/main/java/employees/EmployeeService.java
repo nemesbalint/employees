@@ -1,5 +1,6 @@
 package employees;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployeeService {
 
-    private EmployeesDao employeesDao;
+    private EmployeesRepository repository;
     private EmployeeMapper employeeMapper;
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
 
         List<Employee> filtered =
-            employeesDao.findAll().stream()
+            repository.findAll().stream()
                     .filter(e -> prefix.isEmpty() || e.getName().toLowerCase().startsWith(prefix.get().toLowerCase()))
                     .collect(Collectors.toList());
 
@@ -29,31 +30,32 @@ public class EmployeeService {
     }
 
     public EmployeeDto findEmployeeById(long id) {
-        return employeeMapper.toDto(employeesDao.findById(id));
+        return employeeMapper.toDto(repository.findById(id).orElseThrow(()->new IllegalArgumentException("employee not found")));
     }
 
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
         Employee employee = new Employee(command.getName());
-        employeesDao.createEmployee(employee);
+        repository.save(employee);
         log.info("Employee has been created");
         log.debug("Employee has been created with name {}", command.getName());
         return employeeMapper.toDto(employee);
     }
 
+    @Transactional
     public EmployeeDto updateEmployee(long id, UpdateEmployeeCommand command) {
-        Employee employee = new Employee(id, command.getName());
-        employeesDao.updateEmployee(employee);
+        Employee employee = repository.findById(id).orElseThrow(()->new IllegalArgumentException("employee not found"));
+        employee.setName(command.getName());
         log.debug("Employee has been updated with name {}", command.getName());
         return employeeMapper.toDto(employee);
     }
 
     public void deleteEmployee(long id) {
         log.debug("Employee has been deleted with id {}", id);
-        employeesDao.deleteEmployee(id);
+        repository.deleteById(id);
     }
 
     public void deleteAllEmployees() {
         log.debug("Employees has been deleted");
-        employeesDao.deleteAll();
+        repository.deleteAll();
     }
 }
