@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -15,20 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //@SpringBootTest mert az egesz alkalmazast eliditjuk, webEnvironment valos http rest kereseket kuldunk, a Tomcat is elindul
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(statements = "delete from employees")
 public class EmployeesControllerRestTemplateIT {
 
     @Autowired
     TestRestTemplate template;
 
-    @Autowired
-    EmployeeService employeeService;
-
 //    @Test
     @RepeatedTest(2)
     public void testListEmployees() {
-
-        employeeService.deleteAllEmployees();
-
         EmployeeDto employeeDto =
                 template.postForObject(
                         "/api/employees",
