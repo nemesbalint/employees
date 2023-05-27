@@ -4,6 +4,13 @@ spring:
       on-profile: prod
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  datasource:
+    url: jdbc:mariadb://localhost/employees
+    username: employees
+    password: employees
 
 logging:
     level:
