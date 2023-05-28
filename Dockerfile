@@ -10,6 +10,15 @@ RUN java -Djarmode=layertools -jar employees.jar extract
 
 FROM openjdk:17
 WORKDIR application
+#RUN apt update \
+#    && apt-get install wget \
+#    && apt-get install -y netcat \
+#    && wget http://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+#    && chmod +x ./wait-for-it.sh
+
+RUN curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+    && chmod +x ./wait-for-it.sh
+
 COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
