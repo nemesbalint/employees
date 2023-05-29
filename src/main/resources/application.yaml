@@ -2,6 +2,7 @@ spring:
   config:
     activate:
       on-profile: prod
+
   jpa:
     show-sql: true
     hibernate:
@@ -15,7 +16,22 @@ spring:
     username: employees
     password: employees
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/auth/realms/EmployeesRealm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: employee-app
+      principal-attribute: preferred_username
+
 logging:
     level:
       employees: debug
+      org.springframework.security: DEBUG
+
 message: Hello (from application.yaml)
