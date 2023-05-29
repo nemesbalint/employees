@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.print.attribute.standard.Media;
 import java.net.URI;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/employees")
 @Tag(name = "Operations on employees")
+@Slf4j
 public class EmployeesController {
     private EmployeeService employeeService; //kötelező függőség!
 
@@ -39,7 +42,8 @@ public class EmployeesController {
     }
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "list employees with given prefix")
-    public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix) {
+    public List<EmployeeDto> listEmployees(@RequestParam Optional<String> prefix, Principal principal) {
+        log.debug("logged user: {}", principal.getName());
         return employeeService.listEmployees(prefix);
     }
 
