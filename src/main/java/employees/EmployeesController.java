@@ -43,6 +43,12 @@ public class EmployeesController {
         return employeeService.listEmployees(prefix);
     }
 
+    @GetMapping(value = "/{id}/address")
+    @Operation(summary = "find address by given identifier")
+    public AddressDto findAddressById(@PathVariable("id") long id) {
+        return employeeService.findAddressById(id);
+    }
+
     @GetMapping(value = "/xml", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "list employees with given prefix xml and json version")
     public EmployeesDto listEmployeesAsJsonAndXml(@RequestParam Optional<String> prefix) {

@@ -16,6 +16,7 @@ public class EmployeeService {
 
     private EmployeesRepository repository;
     private EmployeeMapper employeeMapper;
+    private AddressesGateway addressesGateway;
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
 
@@ -58,4 +59,12 @@ public class EmployeeService {
         log.debug("Employees has been deleted");
         repository.deleteAll();
     }
+
+    public AddressDto findAddressById(long id) {
+        log.debug("findAddressById start with id: {}", id );
+        Employee employee = repository.findById(id).orElseThrow(()->new IllegalArgumentException("employee not found"));
+        log.debug("findAddressById findAddressByName with name: {}", employee.getName() );
+        return addressesGateway.findAddressByName(employee.getName());
+    }
+
 }
