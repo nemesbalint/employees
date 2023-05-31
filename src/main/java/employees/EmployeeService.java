@@ -17,6 +17,7 @@ public class EmployeeService {
     private EmployeesRepository repository;
     private EmployeeMapper employeeMapper;
     private AddressesGateway addressesGateway;
+    private EventStoreGateway eventStoreGateway;
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
 
@@ -39,6 +40,7 @@ public class EmployeeService {
         repository.save(employee);
         log.info("Employee has been created");
         log.debug("Employee has been created with name {}", command.getName());
+        eventStoreGateway.sendMessage(command.getName());
         return employeeMapper.toDto(employee);
     }
 
