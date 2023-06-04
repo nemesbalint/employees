@@ -1,10 +1,13 @@
 package employees;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,10 +17,20 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployeeService {
 
+    public static final String EMPLOYEES_CREATED_COUNTER = "employees.created";
     private EmployeesRepository repository;
     private EmployeeMapper employeeMapper;
     private AddressesGateway addressesGateway;
     private EventStoreGateway eventStoreGateway;
+    private MeterRegistry meterRegistry;
+
+    @PostConstruct
+    public void init() {
+        Counter.builder(EMPLOYEES_CREATED_COUNTER)
+                .baseUnit("employees")
+                .description("Number of created employees")
+                .register(meterRegistry);
+    }
 
     public List<EmployeeDto> listEmployees(Optional<String> prefix) {
 
@@ -40,6 +53,7 @@ public class EmployeeService {
         repository.save(employee);
         log.info("Employee has been created");
         log.debug("Employee has been created with name {}", command.getName());
+        meterRegistry.counter(EMPLOYEES_CREATED_COUNTER).increment();
         eventStoreGateway.sendMessage(command.getName());
         return employeeMapper.toDto(employee);
     }
