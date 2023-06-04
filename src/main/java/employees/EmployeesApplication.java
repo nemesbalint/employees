@@ -4,6 +4,8 @@ package employees;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.audit.AuditEventRepository;
+import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
 import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +33,10 @@ public class EmployeesApplication {
 	@Bean
 	public InMemoryHttpExchangeRepository httpTraceRepository () {
 		return new InMemoryHttpExchangeRepository();
+	}
+
+	@Bean
+	public AuditEventRepository auditEventRepository () {
+		return new InMemoryAuditEventRepository();
 	}
 }

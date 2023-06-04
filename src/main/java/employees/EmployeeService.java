@@ -5,10 +5,13 @@ import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,7 @@ public class EmployeeService {
     private AddressesGateway addressesGateway;
     private EventStoreGateway eventStoreGateway;
     private MeterRegistry meterRegistry;
+    private ApplicationEventPublisher eventPublisher;
 
     @PostConstruct
     public void init() {
@@ -54,6 +58,8 @@ public class EmployeeService {
         log.info("Employee has been created");
         log.debug("Employee has been created with name {}", command.getName());
         meterRegistry.counter(EMPLOYEES_CREATED_COUNTER).increment();
+        eventPublisher.publishEvent(new AuditApplicationEvent("anonymous", "employee_has_been_created",
+                Map.of("name", command.getName())));
         eventStoreGateway.sendMessage(command.getName());
         return employeeMapper.toDto(employee);
     }
