@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/employees")
 @Tag(name = "Operations on employees")
+@Slf4j
 public class EmployeesController {
     private EmployeeService employeeService; //kötelező függőség!
 
@@ -75,6 +77,8 @@ public class EmployeesController {
     @Operation(summary = "create and employee")
     @ApiResponse(responseCode = "201", description = "employee has been created")
     public EmployeeDto createEmployee(@Valid @RequestBody CreateEmployeeCommand command) {
+        log.info("create employee");
+        log.info("create employee with name {}", command.getName());
         return employeeService.createEmployee(command);
     }
     @PutMapping("/{id}")

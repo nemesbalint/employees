@@ -38,5 +38,8 @@ info:
 logging:
     level:
       employees: debug
+    file:
+      name: employee.log
+
 
 message: Hello (from application.yaml)
