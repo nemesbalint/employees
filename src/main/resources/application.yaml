@@ -27,7 +27,16 @@ management:
       show-values: ALWAYS
     shutdown:
       enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  appname: Employees
+  contact: info@example.com
+
 logging:
     level:
       employees: debug
+
 message: Hello (from application.yaml)
