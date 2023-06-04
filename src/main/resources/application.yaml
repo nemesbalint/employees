@@ -15,6 +15,18 @@ spring:
     username: employees
     password: employees
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+      show-values: ALWAYS
+    shutdown:
+      enabled: true
 logging:
     level:
       employees: debug
