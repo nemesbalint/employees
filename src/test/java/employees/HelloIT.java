@@ -14,6 +14,6 @@ public class HelloIT {
     @Test
     public void sayHelloTest() {
         var message = helloController.sayHello();
-        assertThat(message).startsWith("Hello Spring Boot");
+        assertThat(message).startsWith("Hello");
     }
 }

@@ -10,10 +10,10 @@ spring:
   liquibase:
     change-log: 'classpath:db/changelog/db.changelog-master.xml'
 
-  datasource:
-    url: jdbc:mariadb://localhost:3306/employees
-    username: employees
-    password: employees
+#  datasource:
+#    url: jdbc:mariadb://localhost:3306/employees
+#    username: employees
+#    password: employees
 
 logging:
     level:

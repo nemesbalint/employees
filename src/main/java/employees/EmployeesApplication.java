@@ -21,6 +21,12 @@ public class EmployeesApplication {
 		SpringApplication.run(EmployeesApplication.class, args);
 	}
 
+
+	@Bean
+	public ObjectMapper objectMapper () {
+		return new ObjectMapper();
+	};
+
 	@Bean
 	public MessageConverter messageConverter(ObjectMapper objectMapper) {
 		MappingJackson2MessageConverter converter  = new MappingJackson2MessageConverter();
