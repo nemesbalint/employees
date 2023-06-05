@@ -58,9 +58,9 @@ public class EmployeeService {
         log.info("Employee has been created");
         log.debug("Employee has been created with name {}", command.getName());
         meterRegistry.counter(EMPLOYEES_CREATED_COUNTER).increment();
-        eventPublisher.publishEvent(new AuditApplicationEvent("anonymous", "employee_has_been_created",
-                Map.of("name", command.getName())));
-        eventStoreGateway.sendMessage(command.getName());
+//        eventPublisher.publishEvent(new AuditApplicationEvent("anonymous", "employee_has_been_created",
+//                Map.of("name", command.getName())));
+//        eventStoreGateway.sendMessage(command.getName());
         return employeeMapper.toDto(employee);
     }
 

@@ -22,8 +22,7 @@ public class EmployeesControllerRestTemplateIT {
     @Autowired
     TestRestTemplate template;
 
-//    @Test
-    @RepeatedTest(2)
+    @Test
     public void testListEmployees() {
         EmployeeDto employeeDto =
                 template.postForObject(

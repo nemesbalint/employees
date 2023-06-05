@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk11
+FROM jenkins/jenkins:jdk17-preview
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
 RUN jenkins-plugin-cli --plugins "git workflow-aggregator pipeline-stage-view blueocean"
