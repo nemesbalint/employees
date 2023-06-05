@@ -3,7 +3,6 @@ pipeline {
     stages {
         stage('package') {
             steps {
-                git 'https://github.com/nemesbalint/employees.git';
                 sh './mvnw clean package'
             }
         }
